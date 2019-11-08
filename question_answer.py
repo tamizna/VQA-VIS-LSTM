@@ -9,6 +9,9 @@ from nltk import word_tokenize
 from keras.applications.vgg16 import preprocess_input
 from keras.preprocessing import image
 from keras.models import load_model
+from keras.models import model_from_json
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 def extract_image_features(img_path):
 	model = models.VGG_16('weights/vgg16_weights_th_dim_ordering_th_kernels.h5')
@@ -30,13 +33,18 @@ def preprocess_question(question):
 	seq = np.reshape(seq,(1,len(seq)))
 	return seq
 
-def generate_answer(img_path, question, model):
+def generate_answer(img_path, question):
+	#model_path = 'weights/model_1e10.h5'
+	#model = models.vis_lstm()
+	#model.load_weights(model_path)
+	#model = load_model(model_path)
+	
+	with open('weights/modele25_architecture.json', 'r') as f:
+		model = model_from_json(f.read())
+   	model.load_weights('weights/modele25_weights.h5')
 	img_features = extract_image_features(img_path)
 	seq = preprocess_question(question)
-	if model == 1:
-		x = [img_features, seq]
-	else:
-		x = [img_features, seq, img_features]
+	x = [img_features, seq]
 	probabilities = model.predict(x)[0]
 	answers = np.argsort(probabilities[:1000])
 	top_answers = [prepare_data.top_answers[answers[-1]],
@@ -46,37 +54,22 @@ def generate_answer(img_path, question, model):
 	return top_answers
 
 def main():
-	"""parser = argparse.ArgumentParser()
-	parser.add_argument('-image', type=str, required=True)
-	parser.add_argument('-question', type=str, required=True)
-	args = parser.parse_args()"""
-
 	K.set_image_dim_ordering('th')
-	model_path = 'weights/model_1load.h5'
 
 	print('---------------Testing---------------')
-	model = models.vis_lstm()
-	model.load_weights(model_path)
-	image = "examples/COCO_val2014_000000000136.jpg"
-	question = "Which animal is this?"
-	print(question)
-	top_answers = generate_answer(image, question, model)
-	print('Top answers: %s, %s, %s.' %(top_answers[0],top_answers[1],top_answers[2]))
+	image = "examples/children.jpg"
+	question = "How many children in this image?"
 
-	image = "examples/COCO_val2014_000000000073.jpg"
-	question = "What is this?"
-	print(question)
-	top_answers = generate_answer(image, question, model)
-	print('Top answers: %s, %s, %s.' %(top_answers[0],top_answers[1],top_answers[2]))
+	top_answers = generate_answer(image, question)
 
-	image = "examples/COCO_val2014_000000000073.jpg"
-	question = "How many bicycle in this image?"
-	print(question)
-	top_answers = generate_answer(image, question, model)
-	print('Top answers: %s, %s, %s.' %(top_answers[0],top_answers[1],top_answers[2]))
-	
-	
-	"""top_answers = generate_answer(args.image, args.question, args.model)
-	print('Top answers: %s, %s, %s.' % (top_answers[0],top_answers[1],top_answers[2]))"""
+	# plot hasil uji
+	fig, ax = plt.subplots()
+
+	# title and labels, setting initial sizes
+	fig.suptitle("Pertanyaan = {}\n 3 jawaban prediksi = {}, {}, {}".format(question, top_answers[0],top_answers[1],top_answers[2]), fontsize=12)
+	img=mpimg.imread(image)
+	imgplot = plt.imshow(img)
+	plt.axis('off')
+	plt.show()
 
 if __name__ == '__main__':main()
