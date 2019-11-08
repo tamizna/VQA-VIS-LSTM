@@ -16,7 +16,7 @@ def vis_lstm():
 	image_model.add(Dense(
 		embedding_matrix.shape[1],
 		input_dim=4096,
-		activation='relu'))
+		activation='linear'))
 	image_model.add(Reshape((1,embedding_matrix.shape[1])))
 	
 	main_model = Sequential()
