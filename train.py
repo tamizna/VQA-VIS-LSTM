@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 
 def main():
 	K.set_image_dim_ordering('th')
-	model_path = 'weights/model_1e10.h5'
+	#model_path = 'weights/model_1e10.h5'
 
 	print('Loading questions ...')
 	questions_train = prepare_data.get_questions_matrix('train')
@@ -36,6 +36,7 @@ def main():
 
 	X_train = [img_features_train, questions_train]
 	X_val = [img_features_val, questions_val]
+	EPOCHS = 10
 	#X_test = [img_features_test, questions_test]
 
 	model.compile(optimizer='adam',
@@ -43,13 +44,13 @@ def main():
 		metrics=['accuracy'])
 
 	history = model.fit(X_train,answers_train,
-		epochs=25,
-		batch_size=200,
+		epochs= EPOCHS,
+		batch_size=300,
 		validation_data=(X_val,answers_val), verbose=1)
 
 	#model.save(model_path)
-	model.save_weights('weights/modele25_weights.h5')
-	with open('weights/modele25_architecture.json', 'w') as f:
+	model.save_weights('weights/modele10b300_weights.h5')
+	with open('weights/modele10b300_architecture.json', 'w') as f:
 		f.write(model.to_json())
 	
 	# hitung nilai akurasi dan loss test
@@ -57,7 +58,7 @@ def main():
 	#print('Accuracy : ', score[1]*100, '%')
 	#print('Loss : ', score[0]*100, '%')
 	
-	# plot nilai akurasi training & validasi
+	'''# plot nilai akurasi training & validasi
 	acc = history.history['acc']
 	val_acc = history.history['val_acc']
  
@@ -70,7 +71,7 @@ def main():
 	plt.xlabel('Epoch')
 	plt.title('Training and validation accuracy')
 	plt.legend()
-	plt.savefig('acce25.png')
+	plt.savefig('e2-acc.png')
 	
 	# plot nilai loss training & validasi
 	loss = history.history['loss']
@@ -82,7 +83,33 @@ def main():
 	plt.xlabel('Epoch')
 	plt.title('Training and validation loss')
 	plt.legend()
-	plt.savefig('losse25.png')
+	plt.savefig('e2-loss.png')'''
+
+	acc = history.history['acc']
+	val_acc = history.history['val_acc']
+	loss = history.history['loss']
+	val_loss = history.history['val_loss']
+	N = EPOCHS
 	
+	plt.style.use("ggplot")
+	plt.figure()
+	plt.plot(np.arange(0, N), acc, label="train_acc")
+	plt.plot(np.arange(0, N), val_acc, label="val_acc")
+	plt.title("VQA Training & Validation Accuracy")
+	plt.xlabel("Epoch #")
+	plt.ylabel("Accuracy")
+	plt.legend(loc="lower left")
+	plt.savefig("e10b300-acc.png")
+
+	plt.style.use("ggplot")
+	plt.figure()
+	plt.plot(np.arange(0, N), loss, label="train_loss")
+	plt.plot(np.arange(0, N), val_loss, label="val_loss")
+	plt.title("VQA Training & Validation Loss")
+	plt.xlabel("Epoch #")
+	plt.ylabel("Loss")
+	plt.legend(loc="lower left")
+	plt.savefig("e10b300-loss.png")
+		
 
 if __name__ == '__main__':main()
