@@ -38,9 +38,6 @@ def get_answers_matrix(split):
 		data_path = 'data/train_qa'
 	elif split == 'val':
 		data_path = 'data/val_qa'
-	else:
-		print('Invalid split!')
-		sys.exit()
 	
 	df = pd.read_pickle(data_path)
 	answers = df[['multiple_choice_answer']].values.tolist()
@@ -58,9 +55,6 @@ def get_questions_matrix(split):
 		data_path = 'data/train_qa'
 	elif split == 'val':
 		data_path = 'data/val_qa'
-	else:
-		print('Invalid split!')
-		sys.exit()
 	
 	df = pd.read_pickle(data_path)
 	questions = df[['question']].values.tolist()
@@ -107,10 +101,3 @@ def get_coco_features(split):
 		image_matrix[i,:] = VGGfeatures[:,id_map[img_labels[i][0]]]
 	
 	return image_matrix
-
-		
-
-
-	
-
-
