@@ -76,9 +76,6 @@ def get_coco_features(split):
 		data_path = 'data/train_qa'
 	elif split == 'val':
 		data_path = 'data/val_qa'
-	else:
-		print('Invalid split!')
-		sys.exit()
 	
 	id_map_path = 'coco_features/coco_vgg_IDMap.txt'
 	features_path = 'coco_features/vgg_feats.mat'
