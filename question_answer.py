@@ -34,9 +34,9 @@ def preprocess_question(question):
 	return seq
 
 def generate_answer(img_path, question):
-	with open('weights/modele25_architecture.json', 'r') as f:
+	with open('weights/model_architecture.json', 'r') as f:
 		model = model_from_json(f.read())
-   	model.load_weights('weights/modele25_weights.h5')
+   	model.load_weights('weights/model_weights.h5')
 	img_features = extract_image_features(img_path)
 	seq = preprocess_question(question)
 	x = [img_features, seq]
@@ -59,7 +59,7 @@ def main():
 	fig, ax = plt.subplots()
 
 	# title and labels, setting initial sizes
-	fig.suptitle("Pertanyaan = {}\n 3 jawaban prediksi = {}, {}, {}".format(question, top_answers[0],top_answers[1],top_answers[2]), fontsize=12)
+	fig.suptitle("Pertanyaan = {}\n 3 jawaban prediksi = {}".format(question, top_answers[0]), fontsize=12)
 	img=mpimg.imread(image)
 	imgplot = plt.imshow(img)
 	plt.axis('off')
