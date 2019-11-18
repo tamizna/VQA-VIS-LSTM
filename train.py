@@ -37,7 +37,7 @@ def main():
 	X_train = [img_features_train, questions_train]
 	X_val = [img_features_val, questions_val]
 	EPOCHS = 10
-	#X_test = [img_features_test, questions_test]
+	BATCH = 200
 
 	model.compile(optimizer='adam',
 		loss='categorical_crossentropy',
@@ -45,7 +45,7 @@ def main():
 
 	history = model.fit(X_train,answers_train,
 		epochs= EPOCHS,
-		batch_size=300,
+		batch_size=BATCH,
 		validation_data=(X_val,answers_val), verbose=1)
 
 	#model.save(model_path)
