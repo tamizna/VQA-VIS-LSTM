@@ -34,11 +34,6 @@ def preprocess_question(question):
 	return seq
 
 def generate_answer(img_path, question):
-	#model_path = 'weights/model_1e10.h5'
-	#model = models.vis_lstm()
-	#model.load_weights(model_path)
-	#model = load_model(model_path)
-	
 	with open('weights/modele25_architecture.json', 'r') as f:
 		model = model_from_json(f.read())
    	model.load_weights('weights/modele25_weights.h5')
@@ -47,9 +42,7 @@ def generate_answer(img_path, question):
 	x = [img_features, seq]
 	probabilities = model.predict(x)[0]
 	answers = np.argsort(probabilities[:1000])
-	top_answers = [prepare_data.top_answers[answers[-1]],
-		prepare_data.top_answers[answers[-2]],
-		prepare_data.top_answers[answers[-3]]]
+	top_answers = [prepare_data.top_answers[answers[-1]]]
 	
 	return top_answers
 
